@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% block class %} class="sub_page" {% endblock class %}
+{% block extra_css %}
+<link href="{% static 'css/home.css' %}" rel="stylesheet" />
+{% endblock extra_css %}
+
+{% block main %}
+<div style="max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
+  <h2 style="text-align: center; color: #333; margin-bottom: 20px;">Feedback Form</h2>
+  <form method="post" action="{% url 'feedback' %}" style="display: flex; flex-direction: column; gap: 15px;">
+    {% csrf_token %}
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <label for="id_Name" style="font-weight: bold; color: #555;">{{ form.Name.label }}</label>
+      <input type="text" name="Name" id="id_Name" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;" required>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <label for="id_Email" style="font-weight: bold; color: #555;">{{ form.Email.label }}</label>
+      <input type="email" name="Email" id="id_Email" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;" required>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <label for="id_Message" style="font-weight: bold; color: #555;">{{ form.Message.label }}</label>
+      <textarea name="Message" id="id_Message" rows="5" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;" required></textarea>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <label for="id_rating" style="font-weight: bold; color: #555;">{{ form.rating.label }}</label>
+      <input type="number" name="rating" id="id_rating" min="1" max="5" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;" required>
+    </div>
+    <div style="text-align: center;">
+      <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">Submit Feedback</button>
+    </div>
+  </form>
+
+  {% if form.errors %}
+    <div style="margin-top: 20px; padding: 10px; background-color: #ffebee; border: 1px solid #ffcdd2; border-radius: 5px; color: #c62828;">
+      <ul style="list-style-type: none; padding: 0; margin: 0;">
+        {% for field, errors in form.errors.items %}
+          <li>{{ field }}: {{ errors }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</div>
+{% endblock main %}

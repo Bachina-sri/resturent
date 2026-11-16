@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block main %}
+<section class="food_section layout_padding-bottom">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>Our Menu</h2>
+        </div>
+
+        <!-- Filter buttons -->
+        <ul class="filters_menu">
+            <li class="{% if not selected_category %}active{% endif %}">
+                <a href="{% url 'menu' %}">All</a>
+            </li>
+            {% for category in categories %}
+                <li class="{% if selected_category == category.categeory_name %}active{% endif %}">
+                    <a href="{% url 'menu' %}?category={{ category.categeory_name }}">{{ category.categeory_name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Menu items -->
+        <div class="filters-content">
+            <div class="row">
+                {% for item in items %}
+                <div class="col-sm-6 col-lg-4">
+                    <div class="box">
+                        <div>
+                            <div class="img-box">
+                                <!-- Image with data-toggle to trigger the modal -->
+                                <img src="{{ item.image.url }}" alt="{{ item.Item_name }}" data-toggle="modal" data-target="#itemModal{{ item.id }}">
+                            </div>
+                            <div class="detail-box">
+                                <h5>{{ item.Item_name }}</h5>
+                                <p>{{ item.description|truncatewords:6 }}</p>
+                                <div class="options">
+                                    <h6>₹{{ item.price }}</h6>
+                                    
+                                    {% if item.id in cart_items %}
+                                        <a href="{% url 'cart' %}" class="btn btn-success">View 🛒</a>
+                                    {% else %}
+                                        <a href="{% url 'add_to_cart' item.id %}" class="btn btn-primary"> Add 🛒</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal for each item -->
+                <div class="modal fade" id="itemModal{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel{{ item.id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="itemModalLabel{{ item.id }}">{{ item.Item_name }}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ item.image.url }}" alt="{{ item.Item_name }}" class="img-fluid">
+                                <p>{{ item.description }}</p>
+                                <p><strong>Price:</strong> ₹{{ item.price }}</p>
+                                <!-- Add more details here if needed -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                {% if item.id in cart_items %}
+                                    <a href="{% url 'cart' %}" class="btn btn-success">View 🛒</a>
+                                {% else %}
+                                    <a href="{% url 'add_to_cart' item.id %}" class="btn btn-primary"> Add 🛒</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="btn-box">
+            <a href="{% url 'cart' %}">View Cart</a>
+        </div>
+    </div>
+</section>
+<!-- In your base.html or wherever you include your head section -->
+<head>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<!-- Before the closing body tag in your base.html -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock main %}
